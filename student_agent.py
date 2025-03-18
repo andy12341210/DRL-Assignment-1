@@ -7,7 +7,7 @@ import torch
 from training import DQN, Agent
 
 with open("taxi_dqn_model.pkl", "rb") as f:
- Q_table = pickle.load(f)
+    Q_table = pickle.load(f, fix_imports=True)
 
 def get_action(obs):
     
