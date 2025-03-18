@@ -75,14 +75,10 @@ class Agent:
         loss.backward()
         self.optimizer.step()
 
-Q_table = None
-
-with open("taxi_dqn_model.pkl", "rb") as f:
-    Q_table = dill.load(f, ignore=True)
-
-print(Q_table)
 
 def get_action(obs):
+    with open("taxi_dqn_model.pkl", "rb") as f:
+        Q_table = dill.load(f, ignore=True)
     
     state_tensor = torch.FloatTensor(obs).unsqueeze(0)
     with torch.no_grad():
