@@ -75,15 +75,16 @@ class Agent:
         loss.backward()
         self.optimizer.step()
 
+loaded_params = np.load("dqn_params.npz")
+w1, b1, w2, b2, w3, b3 = [loaded_params[f"arr_{i}"] for i in range(len(loaded_params))]
 
 def get_action(obs):
-    with open("taxi_dqn_model.pkl", "rb") as f:
-        Q_table = dill.load(f, ignore=True)
-    
-    state_tensor = torch.FloatTensor(obs).unsqueeze(0)
-    with torch.no_grad():
-        q_values = Q_table(state_tensor)
-    return torch.argmax(q_values).item()
+  z1 = np.dot(obs, w1.T) + b1
+  a1 = np.maximum(0, z1)  # ReLU
+  z2 = np.dot(a1, w2.T) + b2
+  a2 = np.maximum(0, z2)  # ReLU
+  z3 = np.dot(a2, w3.T) + b3
+  return np.argmax(z3)
 
     # return random.choice([0, 1, 2, 3, 4, 5]) # Choose a random action
     # You can submit this random agent to evaluate the performance of a purely random strategy.
