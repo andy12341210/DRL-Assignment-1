@@ -1,6 +1,7 @@
 # Remember to adjust your student ID in meta.xml
 import numpy as np
 import pickle
+import dill
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -74,9 +75,12 @@ class Agent:
         loss.backward()
         self.optimizer.step()
 
+Q_table = None
 
 with open("taxi_dqn_model.pkl", "rb") as f:
-    Q_table = pickle.load(f, fix_imports=True)
+    Q_table = dill.load(f, fix_imports=True)
+
+print(Q_table)
 
 def get_action(obs):
     
