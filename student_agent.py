@@ -6,7 +6,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from collections import deque
-from simple_custom_taxi_env import SimpleTaxiEnv
 import random
 # from training import DQN, Agent
 
