@@ -78,7 +78,7 @@ class Agent:
 Q_table = None
 
 with open("taxi_dqn_model.pkl", "rb") as f:
-    Q_table = dill.load(f, fix_imports=True)
+    Q_table = dill.load(f, ignore=True)
 
 print(Q_table)
 
