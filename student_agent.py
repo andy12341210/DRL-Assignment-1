@@ -15,15 +15,13 @@ class DQN(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(DQN, self).__init__()
         self.fc1 = nn.Linear(input_dim, 128)
-        self.fc2 = nn.Linear(128, 256)
-        self.fc3 = nn.Linear(256, 64)
-        self.fc4 = nn.Linear(64, output_dim)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, output_dim)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        return self.fc4(x)
+        return self.fc3(x)
 
 class Agent:
     def __init__(self, state_size, action_size):
@@ -32,9 +30,9 @@ class Agent:
         self.gamma = 0.99  # 折扣係數
         self.epsilon = 1.0  # 初始探索機率
         self.epsilon_min = 0.05
-        self.epsilon_decay = 0.9995
+        self.epsilon_decay = 0.9994
         self.learning_rate = 3e-4
-        self.batch_size = 128
+        self.batch_size = 256
         self.memory = deque(maxlen=2000)
 
         self.model = DQN(self.state_size, self.action_size).to(device)
@@ -80,8 +78,8 @@ class Agent:
         loss.backward()
         self.optimizer.step()
 
-loaded_params = np.load("dqn_params.npz")
-w1, b1, w2, b2, w3, b3, w4, b4 = [loaded_params[f"arr_{i}"] for i in range(len(loaded_params))]
+loaded_params = np.load("dqn_params2.npz")
+w1, b1, w2, b2, w3, b3 = [loaded_params[f"arr_{i}"] for i in range(len(loaded_params))]
 
 def get_action(obs):
   z1 = np.dot(obs, w1.T) + b1
@@ -89,9 +87,7 @@ def get_action(obs):
   z2 = np.dot(a1, w2.T) + b2
   a2 = np.maximum(0, z2)  # ReLU
   z3 = np.dot(a2, w3.T) + b3
-  a3 = np.maximum(0, z3)  # ReLU
-  z4 = np.dot(a3, w4.T) + b4
-  return np.argmax(z4)
+  return np.argmax(z3)
 
     # return random.choice([0, 1, 2, 3, 4, 5]) # Choose a random action
     # You can submit this random agent to evaluate the performance of a purely random strategy.
